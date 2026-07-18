@@ -174,3 +174,10 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('startBtn').addEventListener('click', startPractice);
   document.getElementById('stopBtn').addEventListener('click', () => stopPractice(false));
 });
+
+if ('serviceWorker' in navigator) {
+  // 若 load 事件已經觸發過就直接註冊，否則等 load（避免與首次載入搶頻寬）
+  const registerSW = () => navigator.serviceWorker.register('service-worker.js').catch(() => {});
+  if (document.readyState === 'complete') registerSW();
+  else window.addEventListener('load', registerSW);
+}
