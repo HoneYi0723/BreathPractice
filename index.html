@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>呼吸練習</title>
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#2e7d5b" />
+  <link rel="apple-touch-icon" href="icons/icon-192.png" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main id="app">
+    <section id="settings-screen">
+      <h1>呼吸練習</h1>
+      <div class="row" data-field="inhale">
+        <span class="label">吸氣秒數</span>
+        <div class="stepper">
+          <button class="minus" aria-label="減少">−</button>
+          <output id="inhale">2</output>
+          <button class="plus" aria-label="增加">+</button>
+        </div>
+      </div>
+      <div class="row" data-field="holdIn">
+        <span class="label">閉氣秒數（吸氣後）</span>
+        <div class="stepper">
+          <button class="minus" aria-label="減少">−</button>
+          <output id="holdIn">2</output>
+          <button class="plus" aria-label="增加">+</button>
+        </div>
+      </div>
+      <div class="row" data-field="exhale">
+        <span class="label">呼氣秒數</span>
+        <div class="stepper">
+          <button class="minus" aria-label="減少">−</button>
+          <output id="exhale">2</output>
+          <button class="plus" aria-label="增加">+</button>
+        </div>
+      </div>
+      <div class="row" data-field="holdOut">
+        <span class="label">閉氣秒數（呼氣後）</span>
+        <div class="stepper">
+          <button class="minus" aria-label="減少">−</button>
+          <output id="holdOut">2</output>
+          <button class="plus" aria-label="增加">+</button>
+        </div>
+      </div>
+      <div class="row" data-field="minutes">
+        <span class="label">練習時間（分鐘）</span>
+        <div class="stepper">
+          <button class="minus" aria-label="減少">−</button>
+          <output id="minutes">5</output>
+          <button class="plus" aria-label="增加">+</button>
+        </div>
+      </div>
+      <button id="startBtn" class="primary">開始</button>
+    </section>
+
+    <section id="practice-screen" hidden>
+      <div id="time-left" class="time-left">05:00</div>
+      <div class="circle-wrap">
+        <div id="breath-circle" class="circle">
+          <div class="circle-inner">
+            <div id="phase-name" class="phase-name">準備</div>
+            <div id="phase-count" class="phase-count">0</div>
+          </div>
+        </div>
+      </div>
+      <button id="stopBtn" class="primary stop">停止</button>
+    </section>
+  </main>
+  <script src="src/engine.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
