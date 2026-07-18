@@ -12,7 +12,7 @@ body { font-family: system-ui, sans-serif; }
 .primary { width: 100%; margin-top: 28px; padding: 18px; font-size: 1.3rem; border: none; border-radius: 12px; background: #2e7d5b; color: #fff; cursor: pointer; }
 
 #practice-screen { display: flex; flex-direction: column; align-items: center; min-height: 80vh; justify-content: space-between; padding-top: 24px; }
-.time-left { font-size: 1.2rem; opacity: .7; font-variant-numeric: tabular-nums; }
+.time-left { font-size: 2rem; opacity: .7; font-variant-numeric: tabular-nums; }
 .time-left.final-round { opacity: 1; color: #4db38a; }
 .circle-wrap { flex: 1; display: flex; align-items: center; justify-content: center; }
 /* 圓圈只有兩個目標狀態：放大(吸氣)與原大小(呼氣)。
