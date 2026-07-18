@@ -1,4 +1,4 @@
-const CACHE = 'breath-v2';
+const CACHE = 'breath-v3';
 const ASSETS = [
   '.', 'index.html', 'style.css', 'app.js', 'src/engine.js', 'manifest.json',
   'sound/Start.mp3', 'sound/in.mp3', 'sound/hold.mp3', 'sound/out.mp3', 'sound/finish.mp3',

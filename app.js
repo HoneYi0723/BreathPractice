@@ -1,20 +1,49 @@
-const sounds = {
-  start: new Audio('sound/Start.mp3'),
-  in: new Audio('sound/in.mp3'),
-  hold: new Audio('sound/hold.mp3'),
-  out: new Audio('sound/out.mp3'),
-  finish: new Audio('sound/finish.mp3'),
+const SOUND_FILES = {
+  start: 'sound/Start.mp3',
+  in: 'sound/in.mp3',
+  hold: 'sound/hold.mp3',
+  out: 'sound/out.mp3',
+  finish: 'sound/finish.mp3',
 };
 
+const sounds = {};
+Object.entries(SOUND_FILES).forEach(([key, url]) => {
+  const a = new Audio(url);
+  a.preload = 'auto';
+  sounds[key] = a;
+});
+
+// 把每個音檔整份抓進記憶體再指給 audio 元素，播放時就完全不需要網路。
+// 結束音是最後一刻才第一次播放，若當下才向網路要剩餘資料，很容易失敗
+// （實測會得到 MEDIA_ERR_NETWORK，且練習全程沒有任何徵兆）。
+function preloadSounds() {
+  return Promise.all(Object.entries(SOUND_FILES).map(([key, url]) =>
+    fetch(url)
+      .then((res) => (res.ok ? res.blob() : Promise.reject(new Error('HTTP ' + res.status))))
+      .then((blob) => { sounds[key].src = URL.createObjectURL(blob); })
+      .catch((err) => { console.warn('音檔預載失敗，改為直接串流：', url, err); })
+  ));
+}
+
+// 行動瀏覽器需要使用者手勢才允許播放。以靜音播放再立刻暫停的方式解鎖，
+// 注意不要呼叫 load()：那會中斷正在進行的下載。
 function unlockAudio() {
-  Object.values(sounds).forEach((a) => { a.load(); });
+  Object.entries(sounds).forEach(([key, a]) => {
+    if (key === 'start') return;   // 開始音接著就會正常播放，不需解鎖
+    const wasMuted = a.muted;
+    a.muted = true;
+    const p = a.play();
+    const restore = () => { a.pause(); a.currentTime = 0; a.muted = wasMuted; };
+    if (p && p.then) p.then(restore).catch(restore);
+    else restore();
+  });
 }
 
 function playSound(key) {
   const a = sounds[key];
   if (!a) return;
   a.currentTime = 0;
-  a.play().catch(() => {});
+  a.play().catch((err) => { console.warn('音檔播放失敗：', key, err); });
 }
 
 const STORAGE_KEY = 'breath-settings';
@@ -191,6 +220,7 @@ function runPhase(phases, index) {
 document.addEventListener('DOMContentLoaded', () => {
   loadSettings();
   bindSteppers();
+  preloadSounds();
   document.getElementById('startBtn').addEventListener('click', startPractice);
   document.getElementById('stopBtn').addEventListener('click', () => stopPractice(false));
 });
