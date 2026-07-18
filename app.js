@@ -1,3 +1,22 @@
+const sounds = {
+  start: new Audio('sound/Start.mp3'),
+  in: new Audio('sound/in.mp3'),
+  hold: new Audio('sound/hold.mp3'),
+  out: new Audio('sound/out.mp3'),
+  finish: new Audio('sound/finish.mp3'),
+};
+
+function unlockAudio() {
+  Object.values(sounds).forEach((a) => { a.load(); });
+}
+
+function playSound(key) {
+  const a = sounds[key];
+  if (!a) return;
+  a.currentTime = 0;
+  a.play().catch(() => {});
+}
+
 const STORAGE_KEY = 'breath-settings';
 const FIELDS = ['inhale', 'holdIn', 'exhale', 'holdOut', 'minutes'];
 const MIN = { inhale: 1, holdIn: 0, exhale: 1, holdOut: 0, minutes: 1 };
