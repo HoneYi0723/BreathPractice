@@ -137,8 +137,35 @@ function afterSound(key, callback) {
   ownSession.timers.push(setTimeout(finish, fallbackMs));
 }
 
+// 螢幕關閉或頁面切到背景時，瀏覽器會凍結計時器，呼吸循環就會停住。
+// 練習期間向系統要求保持螢幕開啟，避免因閒置自動熄屏而中斷。
+// （使用者主動按電源鍵鎖螢幕仍會中斷，這是網頁無法克服的限制。）
+let wakeLock = null;
+
+function requestWakeLock() {
+  if (!('wakeLock' in navigator)) return;
+  navigator.wakeLock.request('screen')
+    .then((lock) => {
+      wakeLock = lock;
+      lock.addEventListener('release', () => { wakeLock = null; });
+    })
+    .catch((err) => { console.warn('無法保持螢幕開啟：', err); });
+}
+
+function releaseWakeLock() {
+  if (!wakeLock) return;
+  wakeLock.release().catch(() => {});
+  wakeLock = null;
+}
+
+// 切到背景時系統會自動釋放，切回來且練習仍在進行就重新取得
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible' && session) requestWakeLock();
+});
+
 function startPractice() {
   unlockAudio();
+  requestWakeLock();
   const settings = getSettings();
   session = { settings, timers: [], endTime: 0, tick: null };
   showPractice(true);
@@ -177,6 +204,7 @@ function stopPractice(playFinish) {
   // 清除計時器不會讓正在播的音檔停下來，必須自己停掉，
   // 否則按下停止後開始音（3.3 秒）仍會繼續播完。
   stopAllSounds();
+  releaseWakeLock();
   if (playFinish) playSound('finish');
   showPractice(false);
 }
