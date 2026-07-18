@@ -59,6 +59,9 @@ function bindSteppers() {
 
 let session = null;
 
+// 開始音效播完後的準備緩衝時間
+const LEAD_IN_MS = 2000;
+
 function fmtTime(ms) {
   const s = Math.max(0, Math.ceil(ms / 1000));
   const m = Math.floor(s / 60);
@@ -76,19 +79,23 @@ function updateTimeLeft() {
   document.getElementById('time-left').textContent = fmtTime(session.endTime - Date.now());
 }
 
-// 等某個音檔播完（附逾時保險，避免音檔載入失敗時卡住不動）
+// 等某個音檔播完（附逾時保險，避免音檔載入失敗時卡住不動）。
+// 回呼綁定當下的 session：若期間按了停止或重新開始，這個監聽器就失效，
+// 否則舊的監聽器會在下次播放結束時觸發，多開一條平行的循環鏈。
 function afterSound(key, callback) {
   const a = sounds[key];
+  const ownSession = session;
   const fallbackMs = 5000;
   let done = false;
   const finish = () => {
     if (done) return;
     done = true;
     a.removeEventListener('ended', finish);
+    if (session !== ownSession) return;
     callback();
   };
-  a.addEventListener('ended', finish, { once: true });
-  session.timers.push(setTimeout(finish, fallbackMs));
+  a.addEventListener('ended', finish);
+  ownSession.timers.push(setTimeout(finish, fallbackMs));
 }
 
 function startPractice() {
@@ -108,8 +115,11 @@ function startPractice() {
   updateTimeLeft();
   session.tick = setInterval(updateTimeLeft, 250);
 
-  // 等開始音效播完才進入第一輪，避免與吸氣提示音重疊
-  afterSound('start', runCycle);
+  // 等開始音效播完，再留 LEAD_IN_MS 的準備時間才進入第一輪
+  afterSound('start', () => {
+    if (!session) return;
+    session.timers.push(setTimeout(runCycle, LEAD_IN_MS));
+  });
 }
 
 function stopPractice(playFinish) {
