@@ -8,8 +8,52 @@
 </head>
 <body>
   <main id="app">
-    <h1>呼吸練習</h1>
+    <section id="settings-screen">
+      <h1>呼吸練習</h1>
+      <div class="row" data-field="inhale">
+        <span class="label">吸氣秒數</span>
+        <div class="stepper">
+          <button class="minus" aria-label="減少">−</button>
+          <output id="inhale">2</output>
+          <button class="plus" aria-label="增加">+</button>
+        </div>
+      </div>
+      <div class="row" data-field="holdIn">
+        <span class="label">閉氣秒數（吸氣後）</span>
+        <div class="stepper">
+          <button class="minus" aria-label="減少">−</button>
+          <output id="holdIn">2</output>
+          <button class="plus" aria-label="增加">+</button>
+        </div>
+      </div>
+      <div class="row" data-field="exhale">
+        <span class="label">呼氣秒數</span>
+        <div class="stepper">
+          <button class="minus" aria-label="減少">−</button>
+          <output id="exhale">2</output>
+          <button class="plus" aria-label="增加">+</button>
+        </div>
+      </div>
+      <div class="row" data-field="holdOut">
+        <span class="label">閉氣秒數（呼氣後）</span>
+        <div class="stepper">
+          <button class="minus" aria-label="減少">−</button>
+          <output id="holdOut">2</output>
+          <button class="plus" aria-label="增加">+</button>
+        </div>
+      </div>
+      <div class="row" data-field="minutes">
+        <span class="label">練習時間（分鐘）</span>
+        <div class="stepper">
+          <button class="minus" aria-label="減少">−</button>
+          <output id="minutes">5</output>
+          <button class="plus" aria-label="增加">+</button>
+        </div>
+      </div>
+      <button id="startBtn" class="primary">開始</button>
+    </section>
   </main>
+  <script src="src/engine.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
