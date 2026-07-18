@@ -22,6 +22,6 @@ body { font-family: system-ui, sans-serif; }
 .circle.shrink { transform: scale(1); }
 .circle-inner { text-align: center; color: #fff; }
 .phase-name { font-size: 1.5rem; }
-.phase-count { font-size: 2.4rem; font-variant-numeric: tabular-nums; }
+.phase-count { font-size: 4rem; line-height: 1.1; font-variant-numeric: tabular-nums; }
 .stop { background: #a33; max-width: 480px; }
 [hidden] { display: none !important; }
