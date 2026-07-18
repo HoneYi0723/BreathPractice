@@ -74,9 +74,19 @@ function showPractice(on) {
   document.getElementById('practice-screen').hidden = !on;
 }
 
+// 時間到之後仍會做完當前整輪，這段期間倒數會停在 00:00。
+// 改顯示「最後一輪」，讓使用者知道還沒結束，不會誤以為卡住而按停止。
 function updateTimeLeft() {
   if (!session) return;
-  document.getElementById('time-left').textContent = fmtTime(session.endTime - Date.now());
+  const remaining = session.endTime - Date.now();
+  const el = document.getElementById('time-left');
+  if (remaining > 0) {
+    el.textContent = fmtTime(remaining);
+    el.classList.remove('final-round');
+  } else {
+    el.textContent = '最後一輪';
+    el.classList.add('final-round');
+  }
 }
 
 // 等某個音檔播完（附逾時保險，避免音檔載入失敗時卡住不動）。

@@ -13,6 +13,7 @@ body { font-family: system-ui, sans-serif; }
 
 #practice-screen { display: flex; flex-direction: column; align-items: center; min-height: 80vh; justify-content: space-between; padding-top: 24px; }
 .time-left { font-size: 1.2rem; opacity: .7; font-variant-numeric: tabular-nums; }
+.time-left.final-round { opacity: 1; color: #4db38a; }
 .circle-wrap { flex: 1; display: flex; align-items: center; justify-content: center; }
 /* 圓圈只有兩個目標狀態：放大(吸氣)與原大小(呼氣)。
    閉氣時不更動 class，讓圓圈維持當前縮放，不會彈回。 */
