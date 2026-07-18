@@ -161,11 +161,22 @@ function startPractice() {
   });
 }
 
+function stopAllSounds() {
+  Object.values(sounds).forEach((a) => {
+    if (a.paused) return;
+    a.pause();
+    a.currentTime = 0;
+  });
+}
+
 function stopPractice(playFinish) {
   if (!session) return;
   session.timers.forEach(clearTimeout);
   if (session.tick) clearInterval(session.tick);
   session = null;
+  // 清除計時器不會讓正在播的音檔停下來，必須自己停掉，
+  // 否則按下停止後開始音（3.3 秒）仍會繼續播完。
+  stopAllSounds();
   if (playFinish) playSound('finish');
   showPractice(false);
 }
